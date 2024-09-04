@@ -8,12 +8,12 @@ public class FilaSimples {
     static final double a = 1664525;
     static final double c = 1013904223;
     static final double m = Math.pow(2, 32); 
-    static final int capacidadeMaxima = 5; // Capacidade máxima da fila
-    static final int numServidores = 2; // Número de servidores
-    static double tempoGlobal = 0.0; // Tempo total de simulação
-    static double[] temposAcumulados = new double[capacidadeMaxima + 1]; // Tempos acumulados para cada estado
-    static int clientesPerdidos = 0; // Contador de clientes perdidos
-    static int servidoresOcupados = 0; // Contador de servidores ocupados
+    static final int capacidadeMaxima = 5;
+    static final int numServidores = 2;
+    static double tempoGlobal = 0.0;
+    static double[] temposAcumulados = new double[capacidadeMaxima + 1];
+    static int clientesPerdidos = 0;
+    static int servidoresOcupados = 0;
 
     enum TipoEvento {
         CHEGADA, SAIDA
@@ -51,11 +51,11 @@ public class FilaSimples {
             filaDeClientes.add(evento);
             if (servidoresOcupados < numServidores) {
                 servidoresOcupados++;
-                double tempoAtendimento = 3 + nextRandom() * 2; // Atendimento entre 3 e 5
+                double tempoAtendimento = 3 + nextRandom() * 2;
                 filaDeEventos.add(new Evento(TipoEvento.SAIDA, evento.tempo + tempoAtendimento));
             }
         } else {
-            clientesPerdidos++; // Cliente perdido por falta de capacidade
+            clientesPerdidos++;
         }
     }
 
@@ -64,19 +64,18 @@ public class FilaSimples {
         filaDeClientes.poll();
         if (!filaDeClientes.isEmpty() && servidoresOcupados < numServidores) {
             servidoresOcupados++;
-            double tempoAtendimento = 3 + nextRandom() * 2; // Atendimento entre 3 e 5
+            double tempoAtendimento = 3 + nextRandom() * 2;
             filaDeEventos.add(new Evento(TipoEvento.SAIDA, evento.tempo + tempoAtendimento));
         }
     }
 
     public static void main(String[] args) {
-        filaDeEventos.add(new Evento(TipoEvento.CHEGADA, 2.0)); // Primeiro cliente chega no tempo 2.0
+        filaDeEventos.add(new Evento(TipoEvento.CHEGADA, 2.0));
         double tempoAnterior = 0.0;
 
         while (count > 0) {
             Evento evento = nextEvent();
             if (evento != null) {
-                // Atualiza tempos acumulados
                 double deltaTempo = evento.tempo - tempoAnterior;
                 temposAcumulados[filaDeClientes.size()] += deltaTempo;
                 tempoGlobal += deltaTempo;
@@ -93,13 +92,11 @@ public class FilaSimples {
             }
         }
 
-        // Calcula e mostra a distribuição de probabilidades
         for (int i = 0; i < capacidadeMaxima + 1; i++) {
             double probabilidade = temposAcumulados[i] / tempoGlobal * 100;
             System.out.println(i + " clientes: " + temposAcumulados[i] + " unidades de tempo (" + probabilidade + "%)");
         }
 
-        // Mostra o número de clientes perdidos e o tempo global da simulação
         System.out.println("Clientes perdidos: " + clientesPerdidos);
         System.out.println("Tempo global da simulação: " + tempoGlobal + " unidades de tempo");
     }
